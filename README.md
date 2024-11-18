@@ -2,6 +2,12 @@
 
 Need to make Locks and Mutex
 
+Added template file given in:
+
+```
+parallel_hashtable.c
+```
+
 ## Part 1 
 
 Testing
