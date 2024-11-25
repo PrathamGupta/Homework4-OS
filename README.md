@@ -8,6 +8,12 @@ Added template file given in:
 parallel_hashtable.c
 ```
 
+How to run:
+
+```
+gcc -pthread <filename>.c -o <filename>
+```
+
 ## Part 1 
 
 Testing
