@@ -2,3 +2,5 @@
 .parallel_hashtable
 .parallel_mutex
 .parallel_spin
+.parallel_mutex_opt
+.vscode/
