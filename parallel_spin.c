@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
     keys[i] = random();
 
   for (i=0; i<NUM_BUCKETS; i++){
-    pthread_spin_init(&lock[i], NULL);
+    pthread_spin_init(&lock[i], 0);
   }
   
   threads = (pthread_t *) malloc(sizeof(pthread_t)*num_threads);
