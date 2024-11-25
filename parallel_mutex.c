@@ -95,7 +95,7 @@ int main(int argc, char **argv) {
   start_code = now();
 
   if (argc != 2) {
-    panic("usage: ./parallel_hashtable <num_threads>");
+    panic("usage: ./parallel_mutex <num_threads>");
   }
   if ((num_threads = atoi(argv[1])) <= 0) {
     panic("must enter a valid number of threads to run");

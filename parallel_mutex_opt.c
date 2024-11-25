@@ -52,7 +52,7 @@ bucket_entry * retrieve(int key) {
   bucket_entry *b;
   for (b = table[key % NUM_BUCKETS]; b != NULL; b = b->next) {
     if (b->key == key){
-        pthread_mutex_unlock(&lock[i]);
+        pthread_rwlock_unlock(&lock[i]);
         return b;
     }
   }
@@ -95,7 +95,7 @@ int main(int argc, char **argv) {
   start_code = now();
 
   if (argc != 2) {
-    panic("usage: ./parallel_hashtable <num_threads>");
+    panic("usage: ./parallel_mutex_opt <num_threads>");
   }
   if ((num_threads = atoi(argv[1])) <= 0) {
     panic("must enter a valid number of threads to run");
