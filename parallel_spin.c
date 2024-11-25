@@ -10,7 +10,7 @@
 int num_threads = 1;      // Number of threads (configurable)
 int keys[NUM_KEYS];
 
-pthread_mutex_t lock[NUM_BUCKETS];
+pthread_spinlock_t lock[NUM_BUCKETS];
 
 typedef struct _bucket_entry {
   int key;
@@ -36,27 +36,27 @@ void insert(int key, int val) {
   int i = key % NUM_BUCKETS;
   bucket_entry *e = (bucket_entry *) malloc(sizeof(bucket_entry));
   if (!e) panic("No memory to allocate bucket!");
-  pthread_mutex_lock(&lock[i]);
+  pthread_spin_lock(&lock[i]);
   e->next = table[i];
   e->key = key;
   e->val = val;
   table[i] = e;
-  pthread_mutex_unlock(&lock[i]);
+  pthread_spin_unlock(&lock[i]);
 }
 
 // Retrieves an entry from the hash table by key
 // Returns NULL if the key isn't found in the table
 bucket_entry * retrieve(int key) {
   int i = key % NUM_BUCKETS;
-  pthread_mutex_lock(&lock[i]);
+  pthread_spin_lock(&lock[i]);
   bucket_entry *b;
   for (b = table[key % NUM_BUCKETS]; b != NULL; b = b->next) {
     if (b->key == key){
-        pthread_mutex_unlock(&lock[i]);
+        pthread_spin_unlock(&lock[i]);
         return b;
     }
   }
-  pthread_mutex_unlock(&lock[i]);
+  pthread_spin_unlock(&lock[i]);
   return NULL;
 }
 
@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
     keys[i] = random();
 
   for (i=0; i<NUM_BUCKETS; i++){
-    pthread_mutex_init(&lock[i], NULL);
+    pthread_spin_init(&lock[i], NULL);
   }
   
   threads = (pthread_t *) malloc(sizeof(pthread_t)*num_threads);
@@ -149,7 +149,7 @@ int main(int argc, char **argv) {
   printf("[main] Retrieved %ld/%d keys in %f seconds\n", NUM_KEYS - total_lost, NUM_KEYS, end - start);
 
   for(int i=0; i<NUM_BUCKETS; i++){
-    pthread_mutex_destroy(&lock[i]);
+    pthread_spin_destroy(&lock[i]);
   }
 
   end_code = now();
